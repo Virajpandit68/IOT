@@ -1,0 +1,61 @@
+import Adafruit_DHT
+import RPi.GPIO as GPIO
+import time
+
+DHT_SENSOR = Adafruit_DHT.DHT11
+DHT_PIN = 4        # DHT11 data pin connected to GPIO4
+LED_PIN = 17       # LED connected to GPIO17
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(LED_PIN, GPIO.OUT)
+
+try:
+    while True:
+        humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
+        
+        if humidity is not None and temperature is not None:
+            print("Temperature={0:0.1f}°C  Humidity={1:0.1f}%".format(temperature, humidity))
+            
+            if temperature > 35:
+                GPIO.output(LED_PIN, GPIO.HIGH)
+                print("Alert: Temperature above 35°C")
+            else:
+                GPIO.output(LED_PIN, GPIO.LOW)
+        else:
+            print("Sensor failure. Check wiring!")
+        
+        time.sleep(2)
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Component	Raspberry Pi Pin	Pin Number
+DHT11 VCC	5V	Pin 2
+DHT11 GND	GND	Pin 6
+DHT11 DATA	GPIO4	Pin 7
+LED Anode (+)	GPIO17	Pin 11
+LED Cathode (–)	GND (through 220Ω resistor)	Pin 9
+
+----------------------------------------------------------------------------
+Open Terminal or VNC Viewer.
+
+Run these commands if not already done:
+
+sudo apt-get update
+sudo apt-get install git-core build-essential python3-dev
+git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+cd Adafruit_Python_DHT
+sudo python3 setup.py install
+
+---------------------------------------------------------------------------
+Save your code as temp_alert.py:
+
+nano temp_alert.py
+
+
+
+Run the program:
+
+sudo python3 temp_alert.py
