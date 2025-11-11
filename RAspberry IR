@@ -1,0 +1,23 @@
+import RPi.GPIO as GPIO
+import time
+
+IR_PIN = 10  # GPIO pin connected to IR sensor output
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(IR_PIN, GPIO.IN)
+
+try:
+    while True:
+        if GPIO.input(IR_PIN) == 0:
+            print("Obstacle Detected")
+        else:
+            print("No Obstacle")
+        time.sleep(0.5)
+except KeyboardInterrupt:
+    GPIO.cleanup()
+
+
+
+#VCC	3.3V (Pin 1)	Power for sensor
+#GND	GND (Pin 6)	Common ground
+#OUT	GPIO10 (Pin 19)	Reads sensor signal
