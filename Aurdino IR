@@ -16,3 +16,8 @@ void loop() {
 
   delay(200);
 }
+
+
+VCC	5V
+GND	GND
+OUT	Digital Pin 9
